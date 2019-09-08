@@ -6,6 +6,8 @@ this package is a statistics counter for individual pages
 
 it's a simplest way to shows how many times the page has been visited.
 
+Note: this is a optomized way to count the page views, it's using custome database tables to store data, and not save and publish every time the page requested, so you can use it without warry abiut the performance in high traffec web sites.
+
 Follow these instructions:
 
   1.Install the Package (Developer > Packages)
