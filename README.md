@@ -9,6 +9,7 @@ it's a simplest way to shows how many times the page has been visited.
 Follow these instructions:
 
   1.Install the Package (Developer > Packages)
+  
   2.add the below code to the page template you need to count page views
   
       @{ 
