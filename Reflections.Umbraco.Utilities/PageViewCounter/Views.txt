@@ -1,0 +1,20 @@
+﻿@{ 
+    int nodeId = Umbraco.AssignedContentItem.Id;
+    string cookieName = String.Format("PageView_{0}", nodeId);
+    if (Session[cookieName] == null)
+    {
+        Reflections.UmbracoUtilities.PageViewCounter.SetPageViewCount(nodeId);
+        Session[cookieName] = 1;
+    }
+}
+
+
+
+@{ 
+    int nodeId = Umbraco.AssignedContentItem.Id;
+    Reflections.UmbracoUtilities.PageViewCounter.SetPageViewCount(nodeId);
+}
+
+
+
+@Reflections.UmbracoUtilities.PageViewCounter.GetPageViewCount(Umbraco.AssignedContentItem.Id)
