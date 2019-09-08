@@ -27,3 +27,9 @@ Follow these instructions:
  3.add the below code in the place you need to display the counter in.
  
      @Reflections.UmbracoUtilities.PageViewCounter.GetPageViewCount(Umbraco.AssignedContentItem.Id)
+     
+Please Note this it's not a full umbraco package so if you will uninstall the package you need to delete the below from thee database:
+
+1. Table : ReflectionsUmbracoUtilitiesPageViewCounter
+2. Stored Procedure : ReflectionsUmbracoUtilitiesGetPageViewCount
+3. Stored Procedure : ReflectionsUmbracoUtilitiesSetPageViewCount
