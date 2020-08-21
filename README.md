@@ -1,4 +1,4 @@
-# Umbraco 7 Page View Counter Optimized 
+# Umbraco 7 & 8 Page View Counter Optimized 
 Umbraco Page View Counter (Optimized)
 
 
