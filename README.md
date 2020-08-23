@@ -1,10 +1,10 @@
-# Umbraco 7 Page View Counter Optimized 
+# Umbraco 8 Page View Counter and file download Counter (Optimized)
 Umbraco Page View Counter (Optimized)
 
 
-this package is a statistics counter for individual pages
+this package is a statistics counter for individual pages and file downloads
 
-it's a simplest way to shows how many times the page has been visited.
+it's a simplest way to shows how many times the page has been visited or file has been downloaded.
 
 Note: this is a optimized way to count the page views, it's using custome database tables to store data, and not save and publish every time the page requested, so you can use it without warry abiut the performance in high traffec web sites.
 
