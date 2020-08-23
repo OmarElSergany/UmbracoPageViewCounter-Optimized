@@ -31,17 +31,20 @@ Follow these instructions:
      
 For File Download Counter
 
-'@{
+```
+@{
 var downloadableBrochure = Model.Value<IPublishedContent>("downloadfile");
 int MediaId = downloadableBrochure.Id;
 }
 
-<a href="@(Reflections.UmbracoUtilities.FileDownloadCounter.FileDownloadCount(Umbraco.AssignedContentItem.Id,MediaId))" target="_blank" download>Download Brochure</a>'
+<a href="@(Reflections.UmbracoUtilities.FileDownloadCounter.FileDownloadCount(Umbraco.AssignedContentItem.Id,MediaId))" target="_blank" download>Download Brochure</a>
+```
 
 To get file download counter
 
-'@(Reflections.UmbracoUtilities.FileDownloadCounter.GetFileDownloadCount(Umbraco.AssignedContentItem.Id,MediaId))'
-
+```
+@(Reflections.UmbracoUtilities.FileDownloadCounter.GetFileDownloadCount(Umbraco.AssignedContentItem.Id,MediaId))
+```
 
 Please Note this it's not a full umbraco package so if you will uninstall the package you need to delete the below from thee database:
 
