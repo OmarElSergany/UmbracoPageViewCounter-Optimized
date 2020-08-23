@@ -21,3 +21,29 @@
 
 
 @Reflections.UmbracoUtilities.FileDownloadCounter.GetFileDownloadCount(Umbraco.AssignedContentItem.Id,mediaId)
+
+
+------------------------------------------------------------------
+
+
+
+@{ 
+    int nodeId = Umbraco.AssignedContentItem.Id;
+    Reflections.UmbracoUtilities.PageViewCounter.SetPageViewCount(nodeId);
+}
+
+
+
+@Reflections.UmbracoUtilities.PageViewCounter.GetPageViewCount(Umbraco.AssignedContentItem.Id)
+
+
+@{
+var downloadableBrochure = Model.Value<IPublishedContent>("downloadfile");
+int MediaId = downloadableBrochure.Id;
+}
+
+<a href="@(Reflections.UmbracoUtilities.FileDownloadCounter.FileDownloadCount(Umbraco.AssignedContentItem.Id,MediaId))" target="_blank" download>Download Brochure</a>
+
+
+
+- @(Reflections.UmbracoUtilities.FileDownloadCounter.GetFileDownloadCount(Umbraco.AssignedContentItem.Id,MediaId))
