@@ -239,9 +239,7 @@
   <ItemGroup>
     <Compile Include="FileDownloadCounter\FileDownloadCounter.cs" />
     <Compile Include="FileDownloadCounter\FileDownloadCounterApiController.cs" />
-    <Compile Include="FileDownloadCounter\FileDownloadCounterController.cs" />
     <Compile Include="FileDownloadCounter\FileDownloadCounterInstall.cs" />
-    <Compile Include="FileDownloadCounter\FileDownloadHandler.cs" />
     <Compile Include="PageViewCounter\PageViewCounter.cs" />
     <Compile Include="PageViewCounter\PageViewCounterInstall.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
