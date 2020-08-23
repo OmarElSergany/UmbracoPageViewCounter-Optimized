@@ -90,7 +90,7 @@ BEGIN
 
     SET NOCOUNT ON;
 
-    SELECT ViewsCounter
+    SELECT ISNULL(ViewsCounter,0)
     FROM ReflectionsUmbracoUtilitiesPageViewCounter
     WHERE NodeId = @NodeId  
 

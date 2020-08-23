@@ -1,0 +1,23 @@
+﻿@{ 
+    int nodeId = Umbraco.AssignedContentItem.Id;
+    var downloadableBrochure = Model.Value<IPublishedContent>("downloadableBrochure");
+    int mediaId = downloadableBrochure.Id;
+    if (Session[cookieName] == null)
+    {
+        Reflections.UmbracoUtilities.FileDownloadCounter.SetFileDownloadCount(nodeId,mediaId);
+        Session[cookieName] = 1;
+    }
+}
+
+
+
+@{ 
+    int nodeId = Umbraco.AssignedContentItem.Id;
+    var downloadableBrochure = Model.Value<IPublishedContent>("downloadableBrochure");
+    int mediaId = downloadableBrochure.Id;
+    Reflections.UmbracoUtilities.FileDownloadCounter.SetFileDownloadCount(nodeId,mediaId);
+}
+
+
+
+@Reflections.UmbracoUtilities.FileDownloadCounter.GetFileDownloadCount(Umbraco.AssignedContentItem.Id,mediaId)

@@ -8,33 +8,42 @@ using System.Web.Configuration;
 
 namespace Reflections.UmbracoUtilities
 {
-    public static class PageViewCounter 
+    public static class FileDownloadCounter 
     {
-        public static void SetPageViewCount(int nodeId)
+        public static void SetFileDownloadCount(int nodeId, int mediaId)
         {
             using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["umbracoDbDSN"].ConnectionString))
             {
-                using (SqlCommand cmd = new SqlCommand("ReflectionsUmbracoUtilitiesSetPageViewCount", conn))
+                using (SqlCommand cmd = new SqlCommand("ReflectionsUmbracoUtilitiesSetFileDownloadCount", conn))
                 {
                     cmd.CommandType = System.Data.CommandType.StoredProcedure;
                     cmd.Parameters.Add("NodeId", System.Data.SqlDbType.Int).Value = nodeId;
+                    cmd.Parameters.Add("MediaId", System.Data.SqlDbType.Int).Value = mediaId;
                     conn.Open();
                     cmd.ExecuteNonQuery();
                 }
             }
+
+
+
         }
 
-        public static int GetPageViewCount(int nodeId)
+        public static int GetFileDownloadCount(int nodeId, int mediaId)
         {
             int viewCount = 0;
             using (SqlConnection conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["umbracoDbDSN"].ConnectionString))
             {
-                using (SqlCommand cmd = new SqlCommand("ReflectionsUmbracoUtilitiesGetPageViewCount", conn))
+                using (SqlCommand cmd = new SqlCommand("ReflectionsUmbracoUtilitiesGetFileDownloadCount", conn))
                 {
                     cmd.CommandType = System.Data.CommandType.StoredProcedure;
                     cmd.Parameters.Add("NodeId", System.Data.SqlDbType.Int).Value = nodeId;
+                    cmd.Parameters.Add("MediaId", System.Data.SqlDbType.Int).Value = mediaId;
                     conn.Open();
-                    viewCount = (int)cmd.ExecuteScalar();
+                    try
+                    {
+                        viewCount = (int)cmd.ExecuteScalar();
+                    }
+                    catch { }
                 }
             }
             return viewCount;
@@ -42,4 +51,5 @@ namespace Reflections.UmbracoUtilities
 
     }
 
+   
 }

@@ -15,7 +15,7 @@ using Umbraco.Core.Services;
 
 namespace Reflections.UmbracoUtilities
 {
-    public class PageViewCounterComposer : ComponentComposer<PageViewCounterComponent>, IUserComposer
+    public class FileDownloadCounterComposer : ComponentComposer<FileDownloadCounterComponent>, IUserComposer
     {
         public override void Compose(Composition composition)
         {
@@ -25,14 +25,14 @@ namespace Reflections.UmbracoUtilities
         }
     }
 
-    public class PageViewCounterComponent : IComponent
+    public class FileDownloadCounterComponent : IComponent
     {
         private readonly IScopeProvider scopeProvider;
         private readonly IMigrationBuilder migrationBuilder;
         private readonly IKeyValueService keyValueService;
         private readonly ILogger logger;
 
-        public PageViewCounterComponent(
+        public FileDownloadCounterComponent(
        IScopeProvider scopeProvider,
        IMigrationBuilder migrationBuilder,
        IKeyValueService keyValueService,
@@ -48,9 +48,9 @@ namespace Reflections.UmbracoUtilities
         {
             // ApplicationStarted event in V7: add your events here
 
-            var plan = new MigrationPlan("PageViewCounter");
+            var plan = new MigrationPlan("FileDownloadCounter");
             plan.From(string.Empty)
-                .To<PageViewCounterMigration>("Initialize");
+                .To<FileDownloadCounterMigration>("Initialize");
 
             var upgrader = new Upgrader(plan);
             upgrader.Execute(scopeProvider, migrationBuilder, keyValueService, logger);
@@ -61,38 +61,39 @@ namespace Reflections.UmbracoUtilities
         { }
     }
 
-    public class PageViewCounterMigration : MigrationBase
+    public class FileDownloadCounterMigration : MigrationBase
     {
-        public PageViewCounterMigration(IMigrationContext context) : base(context)
+        public FileDownloadCounterMigration(IMigrationContext context) : base(context)
         { }
 
         public override void Migrate()
         {
-            if (!this.TableExists("ReflectionsUmbracoUtilitiesPageViewCounter"))
+            if (!this.TableExists("ReflectionsUmbracoUtilitiesFileDownloadCounter"))
             {
-                this.Create.Table<ReflectionsUmbracoUtilitiesPageViewCounter>().Do();
+                this.Create.Table<ReflectionsUmbracoUtilitiesFileDownloadCounter>().Do();
             }
 
             StringBuilder sb = new StringBuilder(string.Empty);
 
-            sb.AppendLine("IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ReflectionsUmbracoUtilitiesSetPageViewCount]') AND type in (N'P', N'PC'))");
+            sb.AppendLine("IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ReflectionsUmbracoUtilitiesSetFileDownloadCount]') AND type in (N'P', N'PC'))");
             sb.AppendLine("BEGIN");
             sb.AppendLine("execute ('");
-            sb.AppendLine("CREATE PROCEDURE [dbo].[ReflectionsUmbracoUtilitiesSetPageViewCount]");
+            sb.AppendLine("CREATE PROCEDURE [dbo].[ReflectionsUmbracoUtilitiesSetFileDownloadCount]");
             sb.AppendLine("(");
-            sb.AppendLine("@@NodeId INT");
+            sb.AppendLine("@@NodeId INT,");
+            sb.AppendLine("@@MediaId INT");
             sb.AppendLine(")");
             sb.AppendLine("AS");
             sb.AppendLine("BEGIN");
             sb.AppendLine("SET NOCOUNT ON;");
-            sb.AppendLine("IF EXISTS(SELECT 1 FROM ReflectionsUmbracoUtilitiesPageViewCounter WHERE NodeId = @@NodeId)");
+            sb.AppendLine("IF EXISTS(SELECT 1 FROM ReflectionsUmbracoUtilitiesFileDownloadCounter WHERE NodeId = @@NodeId and MediaId = @@MediaId)");
             sb.AppendLine("BEGIN");
-            sb.AppendLine("UPDATE ReflectionsUmbracoUtilitiesPageViewCounter SET ViewsCounter = ViewsCounter + 1");
-            sb.AppendLine("WHERE NodeId = @@NodeId");
+            sb.AppendLine("UPDATE ReflectionsUmbracoUtilitiesFileDownloadCounter SET DownloadCounter = DownloadCounter + 1");
+            sb.AppendLine("WHERE NodeId = @@NodeId and MediaId = @@MediaId");
             sb.AppendLine("END");
             sb.AppendLine("ELSE");
             sb.AppendLine("BEGIN");
-            sb.AppendLine("INSERT INTO ReflectionsUmbracoUtilitiesPageViewCounter(NodeId, ViewsCounter) VALUES (@@NodeId, 1)");
+            sb.AppendLine("INSERT INTO ReflectionsUmbracoUtilitiesFileDownloadCounter(NodeId, MediaId, DownloadCounter) VALUES (@@NodeId, @@MediaId, 1)");
             sb.AppendLine("END");
             sb.AppendLine("END");
             sb.AppendLine("')");
@@ -104,21 +105,22 @@ namespace Reflections.UmbracoUtilities
 
             sb.Clear();
 
-            sb.AppendLine("IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ReflectionsUmbracoUtilitiesGetPageViewCount]') AND type in (N'P', N'PC'))");
+            sb.AppendLine("IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ReflectionsUmbracoUtilitiesGetFileDownloadCount]') AND type in (N'P', N'PC'))");
             sb.AppendLine("BEGIN");
             sb.AppendLine("execute ('");
-            sb.AppendLine("CREATE PROCEDURE [dbo].[ReflectionsUmbracoUtilitiesGetPageViewCount]");
+            sb.AppendLine("CREATE PROCEDURE [dbo].[ReflectionsUmbracoUtilitiesGetFileDownloadCount]");
             sb.AppendLine("(");
-            sb.AppendLine("@@NodeId INT");
+            sb.AppendLine("@@NodeId INT,");
+            sb.AppendLine("@@MediaId INT");
             sb.AppendLine(")");
             sb.AppendLine("AS");
             sb.AppendLine("BEGIN");
             sb.AppendLine("");
             sb.AppendLine("SET NOCOUNT ON;");
             sb.AppendLine("");
-            sb.AppendLine("SELECT ISNULL(ViewsCounter,0)");
-            sb.AppendLine("FROM ReflectionsUmbracoUtilitiesPageViewCounter");
-            sb.AppendLine("WHERE NodeId = @@NodeId");
+            sb.AppendLine("SELECT ISNULL(DownloadCounter,0)");
+            sb.AppendLine("FROM ReflectionsUmbracoUtilitiesFileDownloadCounter");
+            sb.AppendLine("WHERE NodeId = @@NodeId and MediaId = @@MediaId");
             sb.AppendLine("");
             sb.AppendLine("END");
             sb.AppendLine("')");
@@ -130,14 +132,17 @@ namespace Reflections.UmbracoUtilities
         }
     }
 
-    [TableName("ReflectionsUmbracoUtilitiesPageViewCounter")]
-    [PrimaryKey("NodeId", AutoIncrement = false)]
-    public class ReflectionsUmbracoUtilitiesPageViewCounter
+    [TableName("ReflectionsUmbracoUtilitiesFileDownloadCounter")]
+    [PrimaryKey("NodeId,MediaId")]
+    public class ReflectionsUmbracoUtilitiesFileDownloadCounter
     {
         [Column("NodeId")]
         public int NodeId { get; set; }
 
-        [Column("ViewsCounter")]
-        public int ViewsCounter { get; set; }
+        [Column("MediaId")]
+        public int MediaId { get; set; }
+
+        [Column("DownloadCounter")]
+        public int DownloadCounter { get; set; }
     }
 }
