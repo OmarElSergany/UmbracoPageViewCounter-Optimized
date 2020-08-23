@@ -49,6 +49,10 @@ namespace Reflections.UmbracoUtilities
             return viewCount;
         }
 
+        public static string FileDownloadCount(int nodeId, int mediaId)
+        {
+            return "Umbraco/Api/FileDownload/download?nodeId=" + nodeId + "&mediaId=" + mediaId;
+        }
     }
 
    

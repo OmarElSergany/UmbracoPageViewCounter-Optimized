@@ -18,18 +18,19 @@ using Umbraco.Web.WebApi;
 namespace Reflections.UmbracoUtilities
 {
     //Route: ~/Umbraco/Api/[YourControllerName]
-    public class FileDownloadCounterApiController : UmbracoApiController
+    public class FileDownloadController : UmbracoApiController
     {
         [System.Web.Http.AcceptVerbs("GET")]
         [System.Web.Http.HttpGet]
-        public HttpResponseMessage Download(int nodeId, int mediaId,string FileName)
+        public HttpResponseMessage Download(int nodeId, int mediaId)
         {
 
             FileDownloadCounter.SetFileDownloadCount(nodeId, mediaId);
 
             var MediaFile = Umbraco.Media(mediaId);
             var FileUrl = MediaFile.Url;
-            
+            var FileName = Path.GetFileName(FileUrl);
+
             //Create HTTP Response.
             HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK);
 
